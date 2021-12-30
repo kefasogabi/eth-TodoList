@@ -122,29 +122,48 @@ App = {
     App.setLoading  (true)
     const content = $('#newTask').val()
 
-    var contractAddress = "0xE14cFd427864A398026499824679A8C28FAd9287";
+    var contractAddress = "0x08BaC442de4771E378e2eA4Bf2d3c2fe192272fB";
     window.ethereum.request({ method: 'eth_chainId' });
     const contractABI = await $.getJSON('TodoList.json')
     console.log(contractABI.networks);
     contract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
     contract.methods.createTask(content)
-                .send({from:App.account, gas: 1000000, gasPrice: web3.utils.toWei("2.1", 'gwei')})
+                .send({
+                  from:App.account, 
+                  gas: 1000000, 
+                  gasPrice: web3.utils.toWei("2.1", 'gwei')
+                })
                 .then(function(tx) {
-                console.log(tx)
+                  window.location.reload()
             }).catch(function(tx) {
-                console.log(tx)
-            })
+              window.location.reload()
+            });
 
-    //await App.todoList.createTask(content)
-    window.location.reload()
+  
   },
 
   toggleCompleted: async (e) => {
     App.setLoading(true)
     const taskId = e.target.name
-    await App.todoList.toggleCompleted(taskId)
+    var contractAddress = "0x08BaC442de4771E378e2eA4Bf2d3c2fe192272fB";
+    window.ethereum.request({ method: 'eth_chainId' });
+    const contractABI = await $.getJSON('TodoList.json')
+    console.log(contractABI.networks);
+    contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+
+    contract.methods.toggleCompleted(taskId)
+      .send({
+        from:App.account, 
+        gas: 1000000, 
+        gasPrice: web3.utils.toWei("2.1", 'gwei')
+      })
+      .then(function(tx) {
+        window.location.reload()
+  }).catch(function(tx) {
     window.location.reload()
+  });
+
   },
 
   setLoading: (boolean) => {
