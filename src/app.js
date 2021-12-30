@@ -87,7 +87,6 @@ App = {
 
   renderTasks: async () => {
     // Load the total task count from the blockchain
-    console.log(await App.todoList)
     const taskCount = await App.todoList.taskCount()
     const $taskTemplate = $('.taskTemplate')
 
@@ -120,9 +119,24 @@ App = {
     
   },
   createTask: async () => {
-    App.setLoading(true)
+    App.setLoading  (true)
     const content = $('#newTask').val()
-    await App.todoList.createTask(content)
+
+    var contractAddress = "0xE14cFd427864A398026499824679A8C28FAd9287";
+    window.ethereum.request({ method: 'eth_chainId' });
+    const contractABI = await $.getJSON('TodoList.json')
+    console.log(contractABI.networks);
+    contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+
+    contract.methods.createTask(content)
+                .send({from:App.account, gas: 1000000, gasPrice: web3.utils.toWei("2.1", 'gwei')})
+                .then(function(tx) {
+                console.log(tx)
+            }).catch(function(tx) {
+                console.log(tx)
+            })
+
+    //await App.todoList.createTask(content)
     window.location.reload()
   },
 
