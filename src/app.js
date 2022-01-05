@@ -122,12 +122,17 @@ App = {
     App.setLoading  (true)
     const content = $('#newTask').val()
 
-    var contractAddress = "0x08BaC442de4771E378e2eA4Bf2d3c2fe192272fB";
     window.ethereum.request({ method: 'eth_chainId' });
     const contractABI = await $.getJSON('TodoList.json')
-    console.log(contractABI.networks);
-    contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+    const networkId = web3.eth.net.getId()
+    const networkData = Decentragram.networks[networkId]
+   
 
+    if(networkData){
+      contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
+    }else{
+      window.alert('Decentragram contract not deployed to detected network.')
+    }
     contract.methods.createTask(content)
                 .send({
                   from:App.account, 
@@ -146,11 +151,18 @@ App = {
   toggleCompleted: async (e) => {
     App.setLoading(true)
     const taskId = e.target.name
-    var contractAddress = "0x08BaC442de4771E378e2eA4Bf2d3c2fe192272fB";
     window.ethereum.request({ method: 'eth_chainId' });
     const contractABI = await $.getJSON('TodoList.json')
-    console.log(contractABI.networks);
-    contract = new web3.eth.Contract(contractABI.abi, contractAddress);
+   
+    const networkId = web3.eth.net.getId()
+    const networkData = Decentragram.networks[networkId]
+   
+
+    if(networkData){
+      contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
+    }else{
+      window.alert('Decentragram contract not deployed to detected network.')
+    }
 
     contract.methods.toggleCompleted(taskId)
       .send({
