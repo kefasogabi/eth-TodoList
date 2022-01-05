@@ -124,14 +124,15 @@ App = {
 
     window.ethereum.request({ method: 'eth_chainId' });
     const contractABI = await $.getJSON('TodoList.json')
-    const networkId = web3.eth.net.getId()
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId()
     const networkData = Decentragram.networks[networkId]
    
 
     if(networkData){
       contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
     }else{
-      window.alert('Decentragram contract not deployed to detected network.')
+      window.alert('TodoList contract not deployed to detected network.')
     }
     contract.methods.createTask(content)
                 .send({
@@ -153,15 +154,15 @@ App = {
     const taskId = e.target.name
     window.ethereum.request({ method: 'eth_chainId' });
     const contractABI = await $.getJSON('TodoList.json')
-   
-    const networkId = web3.eth.net.getId()
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId()
     const networkData = Decentragram.networks[networkId]
    
 
     if(networkData){
       contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
     }else{
-      window.alert('Decentragram contract not deployed to detected network.')
+      window.alert('TodoList contract not deployed to detected network.')
     }
 
     contract.methods.toggleCompleted(taskId)
