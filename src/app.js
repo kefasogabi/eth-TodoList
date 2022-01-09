@@ -50,20 +50,26 @@ App = {
 
   loadAccount: async () => {
     // Set the current blockchain account
-    //App.account = web3.selectedAddress
-    App.account = ethereum.selectedAddress
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    App.account = accounts[0]
     
   },
 
   loadContract: async () => {
-    // Create a JavaScript version of the smart contract
-    const todoList = await $.getJSON('TodoList.json')
-    App.contracts.TodoList = TruffleContract(todoList)
-    App.contracts.TodoList.setProvider(App.web3Provider)
+    window.ethereum.request({ method: 'eth_chainId' });
+    const contractABI = await $.getJSON('TodoList.json')
+    const web3 = window.web3;
+    const networkId = await web3.eth.net.getId()
 
-   
-    // Hydrate the smart contract with values from the blockchain
-    App.todoList = await App.contracts.TodoList.deployed()
+    const networkData = contractABI.networks[networkId]
+  
+
+    if(networkData){
+      contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
+    }else{
+      window.alert('TodoList contract not deployed to detected network.')
+    }
   },
 
   render: async () => {
@@ -87,14 +93,16 @@ App = {
 
   renderTasks: async () => {
     // Load the total task count from the blockchain
-    const taskCount = await App.todoList.taskCount()
+    const taskCount =  await contract.methods.taskCount().call()
+   
     const $taskTemplate = $('.taskTemplate')
 
     // Render out each task with a new task template
     for (var i = 1; i <= taskCount; i++) {
       // Fetch the task data from the blockchain
-      const task = await App.todoList.tasks(i)
-      const taskId = task[0].toNumber()
+      const task = await contract.methods.tasks(i).call()
+      
+      const taskId = task[0]
       const taskContent = task[1]
       const taskCompleted = task[2]
 
@@ -122,19 +130,6 @@ App = {
     App.setLoading  (true)
     const content = $('#newTask').val()
 
-    window.ethereum.request({ method: 'eth_chainId' });
-    const contractABI = await $.getJSON('TodoList.json')
-    const web3 = window.web3;
-    const networkId = await web3.eth.net.getId()
-
-    const networkData = contractABI.networks[networkId]
-  
-
-    if(networkData){
-      contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
-    }else{
-      window.alert('TodoList contract not deployed to detected network.')
-    }
     contract.methods.createTask(content)
                 .send({
                   from:App.account, 
@@ -153,19 +148,7 @@ App = {
   toggleCompleted: async (e) => {
     App.setLoading(true)
     const taskId = e.target.name
-    window.ethereum.request({ method: 'eth_chainId' });
-    const contractABI = await $.getJSON('TodoList.json')
-    const web3 = window.web3;
-    const networkId = await web3.eth.net.getId()
-    const networkData = contractABI.networks[networkId]
    
-
-    if(networkData){
-      contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
-    }else{
-      window.alert('TodoList contract not deployed to detected network.')
-    }
-
     contract.methods.toggleCompleted(taskId)
       .send({
         from:App.account, 
