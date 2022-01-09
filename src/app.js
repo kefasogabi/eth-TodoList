@@ -126,8 +126,9 @@ App = {
     const contractABI = await $.getJSON('TodoList.json')
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId()
-    const networkData = Decentragram.networks[networkId]
-   
+
+    const networkData = contractABI.networks[networkId]
+  
 
     if(networkData){
       contract = new web3.eth.Contract(contractABI.abi, networkData.address); 
@@ -156,7 +157,7 @@ App = {
     const contractABI = await $.getJSON('TodoList.json')
     const web3 = window.web3;
     const networkId = await web3.eth.net.getId()
-    const networkData = Decentragram.networks[networkId]
+    const networkData = contractABI.networks[networkId]
    
 
     if(networkData){

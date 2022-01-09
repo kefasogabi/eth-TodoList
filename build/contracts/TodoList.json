@@ -8149,10 +8149,61 @@
       "links": {},
       "address": "0x2721b336b4251DD54baA8cA5AFB324B94b210f97",
       "transactionHash": "0xfb72b23adbfa2307b986ddeb5671e5505e743377e0dee583a3448e9d343ab9bc"
+    },
+    "1641767453258": {
+      "events": {
+        "0xe21fa966ca5cd02748c0752352d18c48165e61cb55b4c29cccf924b5a95fcff1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "completed",
+              "type": "bool"
+            }
+          ],
+          "name": "TaskCompleted",
+          "type": "event"
+        },
+        "0x05d0fb833127fc08168556d0e7ca9554fc3f6bc843b3b7d2bf1c35aea6bab660": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "content",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "completed",
+              "type": "bool"
+            }
+          ],
+          "name": "TaskCreated",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x8AcB9dEc73Bec46e3eb400de04aD969fDC5d2042",
+      "transactionHash": "0xced3e1d9729653f1c816bf792138f0a301d8d80660dc9d16eb23e1825702ab0e"
     }
   },
-  "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-30T15:08:06.311Z",
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-01-09T22:40:28.559Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
